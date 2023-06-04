@@ -1,0 +1,81 @@
+CREATE TABLE EstateType
+(
+TypeID INT PRIMARY KEY not null,
+TypeName VARCHAR(200)not null,
+TypePrice int not null,
+)
+
+CREATE TABLE RealEstate
+(
+EstateID INT PRIMARY KEY not null,
+EstateNumber VARCHAR(200) not null,
+EstateArea FLOAT not null,
+TypeID INT not null,
+foreign key(TypeID) references EstateType(TypeID)
+)
+
+CREATE TABLE Bank
+(
+BankID INT PRIMARY KEY not null,
+BankName VARCHAR(200),
+AccountNumber int unique not null
+)
+
+
+CREATE TABLE Tenant
+(
+FirmID INT PRIMARY KEY not null,
+FirmName VARCHAR(200) not null,
+FirmAddress varchar(200) unique not null,
+BankID int not null,
+Director varchar(200) not null,
+Characterization text varchar,
+foreign key(BankID) references Bank(BankID)
+)
+
+CREATE TABLE Lease
+(
+LeaseID INT PRIMARY KEY not null,
+TenantID int not null,
+EstateID int not null,
+LeaseStart date not null,
+LeaseEnd date not null,
+foreign key(TenantID) references Tenant(TenantID),
+foreign key(EstateID) references RealEstate(EstateID)
+)
+
+CREATE TABLE Bill
+(
+BillID INT PRIMARY KEY not null,
+BillTotal int not null,
+BillDate date not null,
+BillFine int not null,
+TenantID int not null,
+foreign key(TenantID) references Tenant(TenantID)
+)
+
+
+insert into EstateType values (1,'office building',400);
+insert into EstateType values (2,'warehouse',250);
+insert into EstateType values (3,'studio apartment',350);
+
+insert into RealEstate values (1, 1,500,1);
+insert into RealEstate values (2, 2,450,1);
+insert into RealEstate values (3, 3,200,3);
+
+insert into Bank values (1, 'OschadBank',1234);
+insert into Bank values (2,'MonoBank', 5678);
+insert into Bank values (3,'PrivatBank', 9010);
+
+insert into Tenant values (1, 'McDonald’s','Україна, м. Львів, пр. Тараса Шевченка 23',1,'Рональд Макдональд','Я це люблю!');
+insert into Tenant values (2,'Snickers','Україна, м.Львів, вул. Корольова 7', 2, 'Джефф Безос','Не гальмуй - снікерсуй!');
+insert into Tenant values (3,'TatooStudio','Україна, м.Львів, вул. Кримська 1', 3, 'Пінкаміна Діана Пай','Дружба це чудо!'); 
+ 
+
+insert into Bill values (1,3745,'2023-01-09',0,1);
+insert into Bill values (2,5852,'2023-02-03',0,2);
+insert into Bill values (3,2223,'2023-03-04',0,3);
+
+insert into Lease values (1,1,1,'2022-01-09','2023-01-09');
+insert into Lease values (2,2,2,'2021-02-03','2023-04-04');
+insert into Lease values (3,3,3,'2023-02-02','2022-06-02');
