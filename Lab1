@@ -29,7 +29,7 @@ FirmName VARCHAR(200) not null,
 FirmAddress varchar(200) unique not null,
 BankID int not null,
 Director varchar(200) not null,
-Characterization text varchar,
+CharacterizationText varchar,
 foreign key(BankID) references Bank(BankID)
 )
 
@@ -40,7 +40,7 @@ TenantID int not null,
 EstateID int not null,
 LeaseStart date not null,
 LeaseEnd date not null,
-foreign key(TenantID) references Tenant(TenantID),
+foreign key(TenantID) references Tenant(FirmID),
 foreign key(EstateID) references RealEstate(EstateID)
 )
 
@@ -51,8 +51,9 @@ BillTotal int not null,
 BillDate date not null,
 BillFine int not null,
 TenantID int not null,
-foreign key(TenantID) references Tenant(TenantID)
+foreign key(TenantID) references Tenant(FirmID)
 )
+
 
 insert into EstateType values (1,'office building',400);
 insert into EstateType values (2,'warehouse',250);
@@ -78,3 +79,4 @@ insert into Bill values (3,2223,'2023-03-04',0,3);
 insert into Lease values (1,1,1,'2022-01-09','2023-01-09');
 insert into Lease values (2,2,2,'2021-02-03','2023-04-04');
 insert into Lease values (3,3,3,'2023-02-02','2022-06-02');
+
