@@ -54,7 +54,6 @@ TenantID int not null,
 foreign key(TenantID) references Tenant(TenantID)
 )
 
-
 insert into EstateType values (1,'office building',400);
 insert into EstateType values (2,'warehouse',250);
 insert into EstateType values (3,'studio apartment',350);
