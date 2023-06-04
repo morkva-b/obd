@@ -36,11 +36,11 @@ foreign key(BankID) references Bank(BankID)
 CREATE TABLE Lease
 (
 LeaseID INT PRIMARY KEY not null,
-TenantID int not null,
+FirmID int not null,
 EstateID int not null,
 LeaseStart date not null,
 LeaseEnd date not null,
-foreign key(TenantID) references Tenant(FirmID),
+foreign key(FirmID) references Tenant(FirmID),
 foreign key(EstateID) references RealEstate(EstateID)
 )
 
@@ -50,8 +50,8 @@ BillID INT PRIMARY KEY not null,
 BillTotal int not null,
 BillDate date not null,
 BillFine int not null,
-TenantID int not null,
-foreign key(TenantID) references Tenant(FirmID)
+FirmID int not null,
+foreign key(FirmID) references Tenant(FirmID)
 )
 
 
@@ -67,9 +67,9 @@ insert into Bank values (1, 'OschadBank',1234);
 insert into Bank values (2,'MonoBank', 5678);
 insert into Bank values (3,'PrivatBank', 9010);
 
-insert into Tenant values (1, 'McDonald’s','Україна, м. Львів, пр. Тараса Шевченка 23',1,'Рональд Макдональд','Я це люблю!');
-insert into Tenant values (2,'Snickers','Україна, м.Львів, вул. Корольова 7', 2, 'Джефф Безос','Не гальмуй - снікерсуй!');
-insert into Tenant values (3,'TatooStudio','Україна, м.Львів, вул. Кримська 1', 3, 'Пінкаміна Діана Пай','Дружба це чудо!'); 
+insert into Tenant values (1, 'McDonald’s','Україна, м. Львів, пр. Тараса Шевченка 23',1,'Рональд Макдональд','');
+insert into Tenant values (2,'Snickers','Україна, м.Львів, вул. Корольова 7', 2, 'Джефф Безос','');
+insert into Tenant values (3,'TatooStudio','Україна, м.Львів, вул. Кримська 1', 3, 'Пінкаміна Діана Пай',''); 
  
 
 insert into Bill values (1,3745,'2023-01-09',0,1);
