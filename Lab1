@@ -29,7 +29,7 @@ FirmName VARCHAR(200) not null,
 FirmAddress varchar(200) unique not null,
 BankID int not null,
 Director varchar(200) not null,
-CharacterizationText varchar,
+Characterization text varchar,
 foreign key(BankID) references Bank(BankID)
 )
 
