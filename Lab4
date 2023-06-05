@@ -1,0 +1,183 @@
+CREATE TRIGGER insertEstate
+ON RealEstate
+AFTER INSERT
+AS
+BEGIN
+    UPDATE RealEstate
+    SET UCR = CURRENT_USER, 
+        DCR = GETDATE()
+    FROM RealEstate
+    JOIN inserted ON RealEstate.EstateID = inserted.EstateID;
+END;
+
+
+CREATE TRIGGER insertEstateType
+ON EstateType 
+AFTER INSERT
+AS
+BEGIN
+    UPDATE EstateType 
+    SET UCR = CURRENT_USER, 
+        DCR = GETDATE()
+    FROM EstateType 
+    JOIN inserted ON EstateType.TypeID = inserted.TypeID;
+END;
+
+
+CREATE TRIGGER insertBank
+ON Bank
+AFTER INSERT
+AS
+BEGIN
+    UPDATE Bank
+    SET UCR = CURRENT_USER, 
+        DCR = GETDATE()
+    FROM Bank
+    JOIN inserted ON Bank.BankID = inserted.BankID;
+END;
+
+
+CREATE TRIGGER insertBill
+ON Bill
+AFTER INSERT
+AS
+BEGIN
+    UPDATE Bill
+    SET UCR = CURRENT_USER, 
+        DCR = GETDATE()
+    FROM Bill
+    JOIN inserted ON Bill.BillID = inserted.BillID;
+END;
+
+
+CREATE TRIGGER insertLease
+ON Lease
+AFTER INSERT
+AS
+BEGIN
+    UPDATE Lease
+    SET UCR = CURRENT_USER, 
+        DCR = GETDATE()
+    FROM Lease
+    JOIN inserted ON Lease.LeaseID= inserted.LeaseID;
+END;
+
+
+CREATE TRIGGER insertTenant
+ON Tenant
+AFTER INSERT
+AS
+BEGIN
+    UPDATE Tenant 
+    SET UCR = CURRENT_USER, 
+        DCR = GETDATE()
+    FROM Tenant 
+    JOIN inserted ON Tenant.FirmID= inserted.TenantID;
+END;
+
+
+CREATE TRIGGER updateRealEstate
+ON RealEstate 
+AFTER UPDATE
+AS
+BEGIN
+    UPDATE RealEstate 
+    SET ULC = CURRENT_USER, -- або вказуйте конкретне ім'я користувача
+        DLC = GETDATE()
+    FROM RealEstate 
+    JOIN inserted ON RealEstate.EstateID = inserted.EstateID;
+END;
+
+
+CREATE TRIGGER updateEstateType
+ON EstateType 
+AFTER UPDATE
+AS
+BEGIN
+    UPDATE EstateType 
+    SET UCR = CURRENT_USER, 
+        DCR = GETDATE()
+    FROM EstateType 
+    JOIN inserted ON EstateType.TypeID = inserted.TypeID;
+END;
+
+
+CREATE TRIGGER updateBank
+ON Bank 
+AFTER UPDATE
+AS
+BEGIN
+    UPDATE Bank 
+    SET ULC = CURRENT_USER, -- або вказуйте конкретне ім'я користувача
+        DLC = GETDATE()
+    FROM Bank 
+    JOIN inserted ON Bank.BankID = inserted.BankID;
+END;
+
+
+CREATE TRIGGER updateBill
+ON Bill
+AFTER UPDATE AS BEGIN
+    UPDATE Bill
+    SET ULC = CURRENT_USER, -- або вказуйте конкретне ім'я користувача
+        DLC = GETDATE()
+    FROM Bill
+    JOIN inserted ON Bill.BillID= inserted.BillID;
+END;
+
+
+CREATE TRIGGER updateLease
+ON Lease
+AFTER UPDATE AS
+BEGIN
+    UPDATE Lease
+    SET ULC = CURRENT_USER, -- або вказуйте конкретне ім'я користувача
+        DLC = GETDATE()
+    FROM rent
+    JOIN inserted ON Lease.LeaseID= inserted.LeaseID;
+END;
+
+
+CREATE TRIGGER updateTenant
+ON Tenant AFTER UPDATE AS
+BEGIN
+    UPDATE Tenant 
+    SET ULC = CURRENT_USER, -- або вказуйте конкретне ім'я користувача
+        DLC = GETDATE()
+    FROM Tenant 
+    JOIN inserted ON Tenant.FirmID= inserted.FirmID;
+END;
+
+
+CREATE TRIGGER Bank_Insert
+ON Bank 
+INSTEAD OF INSERT
+AS
+BEGIN
+  SET NOCOUNT ON;
+  DECLARE @LastID INT;
+  SELECT @LastID = ISNULL(MAX(BankID), 0) FROM Bank;
+  INSERT INTO Bank(BankID, BankName, AccountNumber)
+  SELECT ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) + @LastID, BankName, AccountNumber
+  FROM inserted;
+END;
+
+
+CREATE TRIGGER prevent_double_booking_and_debt ON Lease
+AFTER INSERT AS BEGIN  
+    IF EXISTS (SELECT 1 FROM Lease
+     WHERE EstateID IN (SELECT EstateID FROM inserted)
+        GROUP BY EstateID  HAVING COUNT(*) > 1 )
+    BEGIN
+        RAISERROR ('Ця кімната вже здана іншим орендарем.', 16, 1);
+        ROLLBACK;
+        RETURN;
+    END
+   
+
+    IF EXISTS (SELECT 1  FROM inserted i
+        INNER JOIN counts t ON i.FirmID = t.FirmID
+        WHERE t.BillTotal > (i.RentAmount * 3))
+    BEGIN
+        RAISERROR ('Орендар має борг, який перевищує суму трьохмісячної оренди.', 16, 1);
+        ROLLBACK; RETURN;  END; END;
