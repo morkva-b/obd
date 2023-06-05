@@ -83,12 +83,12 @@ GROUP BY Characterization;
 
 
 UPDATE Bill
-SET BillFine = BillFine + 210
+SET BillFine = BillFine + 5
 WHERE BillID = 2;
 
 
 UPDATE Bill
-SET BillTotal = BillTotal + 5
+SET BillTotal = BillTotal + 210
 FROM Tenant
 WHERE Tenant.FirmID = Bill.FirmID AND Tenant.FirmName = 'Snickers';
 
