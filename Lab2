@@ -44,7 +44,7 @@ WHERE BillDate > '2023-02-01' AND BillID = p.BillID);
 
 SELECT *
 FROM RealEstate
-WHERE EstateID = ALL (SELECT EstateID FROM EstateType WHERE TypeName LIKE 'warehouse');
+WHERE TypeID = ALL (SELECT TypeID FROM EstateType WHERE TypeName LIKE 'office building');
 
 
 SELECT *
