@@ -59,7 +59,7 @@ GROUP BY BillTotal
 
 SELECT FirmName, FirmAddress, Characterization
 FROM Tenant
-WHERE BankID IN (SELECT BankID FROM Bank WHERE BankName = 'PrivaBank');
+WHERE BankID IN (SELECT BankID FROM Bank WHERE BankName = 'PrivatBank');
 
 
 SELECT t1.BillTotal, t2.Total
