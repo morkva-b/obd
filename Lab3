@@ -1,21 +1,21 @@
 CREATE PROCEDURE CalculateInterest @renter_id INT AS
 BEGIN
-DECLARE @contractId INT, @lastCalculationDate DATE, @currentDate DATE, @interest DECIMAL(10, 2), @loanAmount DECIMAL(10, 2)
+DECLARE @contractId INT, @lastcalculationdate DATE, @currentdate DATE, @interest DECIMAL(10, 2), @loanamount DECIMAL(10, 2)
 
 SELECT @contractId = BillID FROM Bill WHERE FirmID = @renter_id
 
-SELECT @lastCalculationDate = BillDate FROM Bill WHERE FirmID = @renter_id
+SELECT @lastcalculationdate = BillDate FROM Bill WHERE FirmID = @renter_id
 
-SET @currentDate = GETDATE()
+SET @currentdate = GETDATE()
 
-SELECT @loanAmount = BillTotal FROM Bill WHERE BillID = @contractId
+SELECT @loanamount = BillTotal FROM Bill WHERE BillID = @contractId
 
-SELECT @interest = @loanAmount  * DATEDIFF(day, @lastCalculationDate, @currentDate) 
+SELECT @interest = @loanamount  * DATEDIFF(day, @lastcalculationdate, @currentdate) 
 FROM Bill
 WHERE BillID = @contractId
-AND BillDate <= @currentDate
+AND BillDate <= @currentdate
 
-UPDATE Bill SET BillTotal = BillTotal + @interest, BillDate = @currentDate WHERE BillID = @contractId
+UPDATE Bill SET BillTotal = BillTotal + @interest, BillDate = @currentdate WHERE BillID = @contractId
 END
 GO
 
