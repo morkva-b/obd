@@ -32,6 +32,8 @@ WHERE LeaseStart BETWEEN '2022-01-01' AND '2023-05-01';
 SELECT *
 FROM RealEstate
 WHERE EstateArea IN ('200', '100');
+
+
 SELECT *
 FROM Bill p
 WHERE EXISTS (
