@@ -83,7 +83,7 @@ GROUP BY Characterization;
 
 
 UPDATE Bill
-SET BillFine = BillFine + 5
+SET BillFine = BillFine + 210
 WHERE BillID = 2;
 
 
