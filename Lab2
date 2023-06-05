@@ -1,1 +1,109 @@
+SELECT * from Bill
+WHERE (BillDate = '2023-01-09' OR BillDate= '2023-03-04')
+AND BillTotal > 2000
+
+
+SELECT BillTotal, BillDate, BillFine, BillTotal*BillFine as Debt from Bill
+
+
+SELECT *
+FROM Bill
+INNER JOIN Tenant ON Bill.FirmID = Tenant.FirmID
+WHERE (Bill.BillTotal = '1020 ' OR Tenant.FirmName = 'McDonald’s')
+AND Bill.BillDate = '2023-01-09'
+ORDER BY BillTotal ASC;
+
+
+SELECT *
+FROM Tenant
+LEFT JOIN Lease ON Tenant.FirmID = Lease.FirmID;
+
+
+SELECT *
+FROM Bank
+WHERE BankName LIKE '%OschadBank%'
+
+
+SELECT *
+FROM Lease
+WHERE LeaseStart BETWEEN '2022-01-01' AND '2023-05-01';
+
+
+SELECT *
+FROM RealEstate
+WHERE EstateArea IN ('200', '100');
+SELECT *
+FROM Bill p
+WHERE EXISTS (
+SELECT 1
+FROM Bill
+WHERE BillDate > '2023-02-01' AND BillID = p.BillID);
+
+
+SELECT *
+FROM RealEstate
+WHERE EstateID = ALL (SELECT EstateID FROM EstateType WHERE TypeName LIKE 'warehouse');
+
+
+SELECT *
+FROM RealEstate
+WHERE EstateID = ANY (SELECT TypeID FROM EstateType WHERE EstateArea = '400');
+
+
+SELECT BillTotal, SUM (BillFine) as Total
+FROM Bill
+GROUP BY BillTotal
+
+
+SELECT FirmName, FirmAddress, Characterization
+FROM Tenant
+WHERE BankID IN (SELECT BankID FROM Bank WHERE BankName = 'PrivaBank');
+
+
+SELECT t1.BillTotal, t2.Total
+FROM Bill t1, (SELECT SUM(TypePrice) as Total FROM EstateType) t2;
+
+
+WITH RealEstate_tree (EstateID, EstateNumber, EstateArea, TypeID) AS (
+SELECT EstateID, EstateNumber, EstateArea, TypeID FROM RealEstate WHERE EstateID = 1
+UNION ALL
+SELECT c.EstateID, c.EstateNumber, c.EstateArea, c.TypeID  FROM RealEstate c
+JOIN RealEstate_tree s ON c.TypeID = s.TypeID)
+SELECT * from RealEstate_tree
+
+
+SELECT
+Characterization,
+SUM(CASE WHEN FirmName = 'McDonald’s' AND FirmAddress = 'Україна, м. Львів, пр. Шевченка 23' THEN FirmID ELSE 0 END) AS "McDonald’s - Україна, м. Львів, пр. Шевченка 23",
+SUM(CASE WHEN FirmName = 'TatooStudio' AND FirmAddress = 'Україна, м.Львів,  вул. Кримська 1' THEN FirmID ELSE 0 END) AS "TatooStudio - Україна, м.Львів,  вул. Кримська 1"
+FROM  Tenant
+GROUP BY Characterization;
+
+
+UPDATE Bill
+SET BillFine = BillFine + 5
+WHERE BillID = 2;
+
+
+UPDATE Bill
+SET BillTotal = BillTotal + 5
+FROM Tenant
+WHERE Tenant.FirmID = Bill.FirmID AND Tenant.FirmName = 'Snickers';
+
+
+insert into Bank (BankID, BankName, AccountNumber)
+values (4,'Mother', 0901);
+
+
+insert into EstateType(TypeID, TypeName, TypePrice) 
+select 4, EstateNumber, 1020
+from RealEstate
+where EstateID = 2;
+
+
+DELETE FROM EstateType 
+
+
+DELETE FROM RealEstate
+WHERE EstateNumber = 2;
 
