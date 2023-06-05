@@ -1,0 +1,38 @@
+CREATE PROCEDURE CalculateInterest @renter_id INT AS
+BEGIN
+DECLARE @contractId INT, @lastCalculationDate DATE, @currentDate DATE, @interest DECIMAL(10, 2), @loanAmount DECIMAL(10, 2)
+
+SELECT @contractId = BillID FROM Bill WHERE FirmID = @renter_id
+
+SELECT @lastCalculationDate = BillDate FROM Bill WHERE FirmID = @renter_id
+
+SET @currentDate = GETDATE()
+
+SELECT @loanAmount = BillTotal FROM Bill WHERE BillID = @contractId
+
+SELECT @interest = @loanAmount  * DATEDIFF(day, @lastCalculationDate, @currentDate) 
+FROM Bill
+WHERE BillID = @contractId
+AND BillDate <= @currentDate
+
+UPDATE Bill SET BillTotal = BillTotal + @interest, BillDate = @currentDate WHERE BillID = @contractId
+END
+GO
+
+
+CREATE PROCEDURE CalculateInterestForAll AS BEGIN
+DECLARE @contractID INT, @AllClients INT, @clientID INT
+  
+SELECT @AllClients = COUNT(*) FROM Bill
+  
+SET @contractID = 1
+
+WHILE @contractID <= @AllClients BEGIN
+
+SELECT @clientID = FitmID FROM counts 
+WHERE @contractID = BillID
+EXEC CalculateInterest @clientID
+ 
+SET @contractID = @contractID + 1
+END END
+GO
