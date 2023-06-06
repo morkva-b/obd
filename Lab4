@@ -1,3 +1,40 @@
+ALTER TABLE Tenant
+ADD UCR varchar(20),
+    DCR date,
+    ULC varchar(20),
+    DLC date;
+
+ALTER TABLE Bill
+ADD UCR varchar(20),
+    DCR date,
+    ULC varchar(20),
+    DLC date;
+
+ALTER TABLE RealEstate
+ADD UCR varchar(20),
+    DCR date,
+    ULC varchar(20),
+    DLC date;
+
+ALTER TABLE EstateType
+ADD UCR varchar(20),
+    DCR date,
+    ULC varchar(20),
+    DLC date;
+
+ALTER TABLE Bank
+ADD UCR varchar(20),
+    DCR date,
+    ULC varchar(20),
+    DLC date;
+
+ALTER TABLE Lease
+ADD UCR varchar(20),
+    DCR date,
+    ULC varchar(20),
+    DLC date;
+
+
 CREATE TRIGGER insertEstate
 ON RealEstate
 AFTER INSERT
@@ -72,7 +109,7 @@ BEGIN
     SET UCR = CURRENT_USER, 
         DCR = GETDATE()
     FROM Tenant 
-    JOIN inserted ON Tenant.FirmID= inserted.TenantID;
+    JOIN inserted ON Tenant.FirmID= inserted.FirmID;
 END;
 
 
