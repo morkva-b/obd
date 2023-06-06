@@ -112,6 +112,11 @@ BEGIN
     JOIN inserted ON Tenant.FirmID= inserted.FirmID;
 END;
 
+UPDATE RealEstate
+SET EstateArea = 220
+WHERE EstateNumber = 3;
+
+SELECT * FROM RealEstate;
 
 CREATE TRIGGER updateRealEstate
 ON RealEstate 
