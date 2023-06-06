@@ -185,6 +185,8 @@ BEGIN
     JOIN inserted ON Tenant.FirmID= inserted.FirmID;
 END;
 
+insert into Bank values (5,'PrivatBank', NULL,NULL,NULL,NULL,NULL);
+SELECT * FROM Bank;
 
 CREATE TRIGGER Bank_Insert
 ON Bank 
@@ -203,7 +205,7 @@ ALTER TABLE Lease
 ADD RentPRICE;
 
 CREATE TRIGGER prevent_double_booking_and_debt ON Lease
-AFTER INSERT AS BEGIN  
+AFTER INSERT, UPDATE AS BEGIN  
     IF EXISTS (SELECT 1 FROM Lease
      WHERE EstateID IN (SELECT EstateID FROM inserted)
         GROUP BY EstateID  HAVING COUNT(*) > 1 )
