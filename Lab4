@@ -195,7 +195,7 @@ AS
 BEGIN
   SET NOCOUNT ON;
   DECLARE @LastID INT;
-  SELECT @LastID = ISNULL(MAX(BankID), 0) FROM Bank;
+  SELECT @LastID = ISNULL(MAX(SurrogateID), 0) FROM Bank;
   INSERT INTO Bank(BankID, BankName, AccountNumber)
   SELECT ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) + @LastID, BankName, AccountNumber
   FROM inserted;
